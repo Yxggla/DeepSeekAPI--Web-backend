@@ -8,19 +8,13 @@ const User = sequelize.define("User", {
   password: { type: DataTypes.STRING, allowNull: false },
   token: { type: DataTypes.STRING },
 });
-const Conversation = sequelize.define("Conversation", {
+
+// 定义 Chat 模型
+const Chat = sequelize.define("Chat", {
   userId: { type: DataTypes.INTEGER, allowNull: false },
   title: { type: DataTypes.STRING, allowNull: false },
-  createdAt: {
-    type: DataTypes.DATE,
-    allowNull: false,
-    defaultValue: DataTypes.NOW,
-  },
-});
-// 定义 Message 模型
-const Message = sequelize.define("Message", {
-  conversationId: { type: DataTypes.INTEGER, allowNull: false },
-  content: { type: DataTypes.STRING, allowNull: false },
+  message: { type: DataTypes.STRING, allowNull: false },
+  response: { type: DataTypes.STRING, allowNull: false },
   createdAt: {
     type: DataTypes.DATE,
     allowNull: false,
@@ -28,10 +22,7 @@ const Message = sequelize.define("Message", {
   },
 });
 // 定义关系
-User.hasMany(Conversation, { foreignKey: "userId" });
-Conversation.belongsTo(User, { foreignKey: "userId" });
+User.hasMany(Chat, { foreignKey: "userId" });
+Chat.belongsTo(User, { foreignKey: "userId" });
 
-Conversation.hasMany(Message, { foreignKey: "conversationId" });
-Message.belongsTo(Conversation, { foreignKey: "conversationId" });
-
-module.exports = { User, Conversation, Message };
+module.exports = { User, Chat };
