@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const { Chat, User } = require("../models"); // 确保路径正确
 const secretKey = process.env.SECRET_KEY;
 const router = express.Router();
+const Sequelize = require("sequelize");
 
 // 获取用户信息
 router.get("/user", async (req, res) => {
@@ -73,7 +74,7 @@ router.get("/chats", async (req, res) => {
   }
 });
 
-// 每次的对应一组的数据存储
+// 每次的对应一组的数据存储 10/9 ok
 router.post("/saveChats", async (req, res) => {
   const authHeader = req.headers.authorization;
 
@@ -124,7 +125,7 @@ router.get("/titles", async (req, res) => {
 
     const titles = await Chat.findAll({
       where: { userId: user.id },
-      attributes: ["title"], // 只选择 title 字段
+      attributes: [[Sequelize.fn("DISTINCT", Sequelize.col("title")), "title"]], // 去重
     });
     res.json(titles);
   } catch (error) {
